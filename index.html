@@ -1,0 +1,37 @@
+<!-- client.html -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Remote Keyboard Control</title>
+  </head>
+  <body>
+    <h1>Remote Keyboard Control Client</h1>
+    <p>Press keys to send them to the host machine.</p>
+
+    <script>
+      // Connect to WebSocket server on the host machine
+      const ws = new WebSocket('ws://localhost:8080');
+
+      ws.onopen = () => {
+        console.log('Connected to WebSocket server');
+      };
+
+      ws.onclose = () => {
+        console.log('Disconnected from WebSocket server');
+      };
+
+      // Capture keyboard events and send them to the server
+      document.addEventListener('keydown', (event) => {
+        const keyData = { type: 'keydown', key: event.key };
+        ws.send(JSON.stringify(keyData));
+      });
+
+      document.addEventListener('keyup', (event) => {
+        const keyData = { type: 'keyup', key: event.key };
+        ws.send(JSON.stringify(keyData));
+      });
+    </script>
+  </body>
+</html>
